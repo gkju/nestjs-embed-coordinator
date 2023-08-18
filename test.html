@@ -2,9 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>$Title$</title>
+  <title>Title</title>
 </head>
 <body>
-$END$
+<script type="module">
+  import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
+
+  const socket = io("localhost:81/krakow-sensory");
+
+  socket.on("tempC", console.log);
+  socket.emit("listen-sensor", "tempC");
+</script>
 </body>
 </html>
