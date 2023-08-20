@@ -11,6 +11,7 @@ export enum SensorType {
   AQI_PM10 = 'aqipm10',
   AQI_PM25 = 'aqipm2',
   PRESSURE = 'presPa',
+  ATMOSPHERIC_PRESSURE = 'atmopresPa',
   HUMIDITY = 'humRH',
   TEMPERATURE = 'tempC',
 }

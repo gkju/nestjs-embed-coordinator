@@ -12,6 +12,8 @@
 
   socket.on("tempC", console.log);
   socket.emit("listen-sensor", "tempC");
+  socket.emit("listen-sensor", "humRH");
+  socket.on("humRH", console.log);
 </script>
 </body>
 </html>

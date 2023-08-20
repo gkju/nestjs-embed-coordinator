@@ -8,11 +8,11 @@ import { CracowSensorUpdateProvider, SensorType } from "../cracow-sensor-update-
 })
 export class WebsocketGatewayGateway {
   constructor(private SensorUpdateProvider: CracowSensorUpdateProvider) {
-    SensorUpdateProvider.registerListener(SensorType.TEMPERATURE, (value) => {
-      this.server
-        .to(SensorType.TEMPERATURE)
-        .emit(SensorType.TEMPERATURE, value);
-    });
+    for (const sensorType of Object.values(SensorType)) {
+      SensorUpdateProvider.registerListener(<SensorType>sensorType, (value) => {
+        this.server.to(sensorType).emit(sensorType, value);
+      });
+    }
   }
 
   @WebSocketServer()
