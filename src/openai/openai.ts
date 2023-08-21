@@ -52,6 +52,8 @@ export class Openai {
     });
   }
 
+  // TODO: do not allow new commands until previous ones have been processed? glitchy behaviour
+
   public callOpenAi = async (
     prompt: string,
     functions: OpenAI.Chat.Completions.CompletionCreateParams.Function[],
