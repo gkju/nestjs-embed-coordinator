@@ -51,7 +51,7 @@ export class MinecraftControlProvider {
     room: string,
   ) {
     // `${space}/${area}/${location}/${room}/${item}`
-    const topic = aliasMap[alias] + `/${room}/${item}`;
+    const topic = aliasMap.get(alias) + `/${room}/${item}`;
     this.client.publish(minecraftControlTopicPrefix + topic, action);
   }
 }
