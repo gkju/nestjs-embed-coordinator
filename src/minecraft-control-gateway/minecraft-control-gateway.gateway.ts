@@ -97,14 +97,14 @@ export class MinecraftControlGatewayGateway {
 
   private callFunction = (name: string, argument: string) => {
     console.log('Calling function', name, argument);
-    const { space, area, location, item, action, alias, room } =
+    const { city, area, location, item, action, alias, room } =
       JSON.parse(argument);
 
     switch (name) {
       case 'sendMessage':
-        const topic = `${space}/${area}/${location}/${room}/${item}`;
+        const topic = `${city}/${area}/${location}/${room}/${item}`;
         this.ControlProvider.sendMessage(topic, action);
-        return `Sent ${action} to ${item} in ${room} in ${location} in ${area} in ${space}`;
+        return `Sent ${action} to ${item} in ${room} in ${location} in ${area} in ${city}`;
       case 'sendActionWithAlias':
         this.ControlProvider.sendActionWithAlias(alias, item, action, room);
         return `Sent ${action} to ${item} in ${room} at ${alias}`;
