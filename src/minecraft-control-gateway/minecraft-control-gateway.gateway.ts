@@ -76,4 +76,11 @@ export class MinecraftControlGatewayGateway {
 
     socket.emit('check-permissions', response);
   }
+
+  @SubscribeMessage('openai-action')
+  handleOpenAIAction(
+    @MessageBody() prompt: string,
+  ): void {
+
+  }
 }

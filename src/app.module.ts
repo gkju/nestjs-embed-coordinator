@@ -8,10 +8,11 @@ import { MinecraftSensorProvider } from './minecraft-sensor-provider/minecraft-s
 import { MinecraftSensorGatewayGateway } from './minecraft-sensor-gateway/minecraft-sensor-gateway.gateway';
 import { MinecraftControlGatewayGateway } from './minecraft-control-gateway/minecraft-control-gateway.gateway';
 import { MinecraftControlProvider } from './minecraft-control-provider/minecraft-control-provider';
+import { Openai } from './openai/openai';
 
 @Module({
   imports: [ConfigModule.forRoot()],
   controllers: [AppController],
-  providers: [AppService, WebsocketGatewayGateway, CracowSensorUpdateProvider, MinecraftSensorProvider, MinecraftSensorGatewayGateway, MinecraftControlGatewayGateway, MinecraftControlProvider],
+  providers: [AppService, WebsocketGatewayGateway, CracowSensorUpdateProvider, MinecraftSensorProvider, MinecraftSensorGatewayGateway, MinecraftControlGatewayGateway, MinecraftControlProvider, Openai],
 })
 export class AppModule {}
