@@ -1,18 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { MqttClient } from 'mqtt';
-import { SensorUpdateListener } from '../cracow-sensor-update-provider/cracow-sensor-update-provider';
-import { ConfigService } from '@nestjs/config';
-import * as mqtt from 'mqtt';
-import { minecraftControlTopics } from '../config';
-
-// space > area > location > item > action
-const aliasMap: Map<string, string> = new Map([
-  ['main_base', 'spawn/central/base'],
-]);
-
-const items = ['front_door', 'back_door', 'garage_door', 'gate', 'window'];
-
-const actions = ['open', 'close', 'lock', 'unlock', 'turnon', 'turnoff'];
+import { Injectable } from "@nestjs/common";
+import * as mqtt from "mqtt";
+import { MqttClient } from "mqtt";
+import { SensorUpdateListener } from "../cracow-sensor-update-provider/cracow-sensor-update-provider";
+import { ConfigService } from "@nestjs/config";
+import { aliasMap, minecraftControlTopics } from "../config";
 
 @Injectable()
 export class MinecraftControlProvider {
@@ -51,13 +42,8 @@ export class MinecraftControlProvider {
     this.client.publish(topic, message);
   }
 
-  public sendMessageWithAlias(
-    alias: string,
-    item: string,
-    action: string,
-    message: string,
-  ) {
-    const topic = aliasMap[alias] + '/' + item + '/' + action;
-    this.client.publish(topic, message);
+  public sendActionWithAlias(alias: string, item: string, action: string) {
+    const topic = aliasMap[alias] + '/' + item;
+    this.client.publish(topic, action);
   }
 }

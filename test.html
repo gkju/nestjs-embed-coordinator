@@ -8,12 +8,17 @@
 <script type="module">
   import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
 
-  const socket = io("localhost:81/krakow-sensory");
+  /*const socket = io("localhost:81/krakow-sensory");
 
   socket.on("tempC", console.log);
   socket.emit("listen-sensor", "tempC");
   socket.emit("listen-sensor", "humRH");
-  socket.on("humRH", console.log);
+  socket.on("humRH", console.log);*/
+
+  const socket = io("localhost:81/minecraft-control");
+
+  socket.emit('openai-action', 'Could you please turn on the spawn central powerplant fission reactor A?')
+  //socket.emit('openai-action', 'Could you turn the lights on at central spawn in the main base on the entryway?')
 </script>
 </body>
 </html>
