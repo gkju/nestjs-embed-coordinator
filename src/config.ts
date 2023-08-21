@@ -39,6 +39,7 @@ export const rooms = [
   'block_b',
   'block_c',
   'block_d',
+  'entranceway',
 ];
 
 export const items = [

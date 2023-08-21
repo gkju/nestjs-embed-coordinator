@@ -16,13 +16,17 @@ import { PermissionDb } from '../authorization/tempDb';
 import { hasPermission, Permission } from '../authorization/permission';
 import { Openai } from '../openai/openai';
 import { functions } from '../config';
+import { IsNotEmpty } from 'class-validator';
 
-export interface mqttMessageDTO {
+export class mqttMessageDTO {
+  @IsNotEmpty()
   topic: string;
+  @IsNotEmpty()
   message: string;
 }
 
-interface OpenAiActionRequest {
+class OpenAiActionRequest {
+  @IsNotEmpty()
   prompt: string;
   conversationId?: string;
 }
@@ -66,6 +70,10 @@ export class MinecraftControlGatewayGateway {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     @ConnectedSocket() socket: Socket,
   ): void {
+    if (typeof data == 'string') {
+      data = JSON.parse(data);
+    }
+
     this.ControlProvider.sendMessage(data.topic, data.message);
     return;
   }
@@ -76,6 +84,10 @@ export class MinecraftControlGatewayGateway {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     @ConnectedSocket() socket: Socket,
   ): void {
+    if (typeof data == 'string') {
+      data = JSON.parse(data);
+    }
+
     const userPerms = PermissionDb[data.user];
     const response = new PermissionCheckResponse(data);
     response.hasPermission = hasPermission(
@@ -109,6 +121,9 @@ export class MinecraftControlGatewayGateway {
     @MessageBody() data: OpenAiActionRequest,
     @ConnectedSocket() socket: Socket,
   ): void {
+    if (typeof data == 'string') {
+      data = JSON.parse(data);
+    }
     this.openai
       .callOpenAi(
         data.prompt,
