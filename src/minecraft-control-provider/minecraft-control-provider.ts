@@ -1,14 +1,19 @@
-import { Injectable } from "@nestjs/common";
-import * as mqtt from "mqtt";
-import { MqttClient } from "mqtt";
-import { SensorUpdateListener } from "../cracow-sensor-update-provider/cracow-sensor-update-provider";
-import { ConfigService } from "@nestjs/config";
-import { aliasMap, minecraftControlTopics } from "../config";
+import { Injectable } from '@nestjs/common';
+import * as mqtt from 'mqtt';
+import { MqttClient } from 'mqtt';
+import { SensorUpdateListener } from '../cracow-sensor-update-provider/cracow-sensor-update-provider';
+import { ConfigService } from '@nestjs/config';
+import {
+  aliasMap,
+  minecraftControlTopicPrefix,
+  minecraftControlTopics,
+} from '../config';
+import { WildcardSensorUpdateListener } from '../minecraft-sensor-provider/minecraft-sensor-provider';
 
 @Injectable()
 export class MinecraftControlProvider {
   private client: MqttClient;
-  private wildcardListeners: SensorUpdateListener[] = [];
+  private wildcardListeners: WildcardSensorUpdateListener[] = [];
 
   constructor(private configService: ConfigService) {
     this.client = mqtt.connect(configService.get<string>('MQTT_ADDRESS'), {
@@ -26,20 +31,17 @@ export class MinecraftControlProvider {
   }
 
   private MessageHandler(topic: string, message: Buffer) {
-    const value = Number(message.toString());
-
-    this.wildcardListeners.forEach((listener) => listener(value));
+    this.wildcardListeners.forEach((listener) =>
+      listener(message.toString(), topic),
+    );
   }
 
-  public registerWildcardListener(
-    type: string,
-    listener: SensorUpdateListener,
-  ) {
+  public registerWildcardListener(listener: WildcardSensorUpdateListener) {
     this.wildcardListeners.push(listener);
   }
 
   public sendMessage(topic: string, message: string) {
-    this.client.publish(topic, message);
+    this.client.publish(minecraftControlTopicPrefix + topic, message);
   }
 
   public sendActionWithAlias(
@@ -50,6 +52,6 @@ export class MinecraftControlProvider {
   ) {
     // `${space}/${area}/${location}/${room}/${item}`
     const topic = aliasMap[alias] + `/${room}/${item}`;
-    this.client.publish(topic, action);
+    this.client.publish(minecraftControlTopicPrefix + topic, action);
   }
 }

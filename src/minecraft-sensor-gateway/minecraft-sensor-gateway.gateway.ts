@@ -5,9 +5,9 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { SensorType } from '../cracow-sensor-update-provider/cracow-sensor-update-provider';
 import { Server, Socket } from 'socket.io';
 import { MinecraftSensorProvider } from '../minecraft-sensor-provider/minecraft-sensor-provider';
+import { mqttMessageDTO } from '../minecraft-control-gateway/minecraft-control-gateway.gateway';
 
 @WebSocketGateway(81, {
   namespace: 'minecraft-sensory',
@@ -15,16 +15,12 @@ import { MinecraftSensorProvider } from '../minecraft-sensor-provider/minecraft-
 })
 export class MinecraftSensorGatewayGateway {
   constructor(private SensorUpdateProvider: MinecraftSensorProvider) {
-    for (const sensorType of Object.values(SensorType)) {
-      SensorUpdateProvider.registerWildcardListener(sensorType, (value) => {
-        const types = sensorType.split('/');
-        for (let i = 0; i < types.length; i++) {
-          this.server
-            .to(types.slice(0, i + 1).join('/'))
-            .emit(sensorType, value);
-        }
-      });
-    }
+    SensorUpdateProvider.registerWildcardListener((value, sensorType) => {
+      const types = sensorType.split('/');
+      for (let i = 0; i < types.length; i++) {
+        this.server.to(types.slice(0, i + 1).join('/')).emit(sensorType, value);
+      }
+    });
   }
 
   @WebSocketServer()
@@ -36,6 +32,20 @@ export class MinecraftSensorGatewayGateway {
     @ConnectedSocket() socket: Socket,
   ): void {
     socket.join(data);
+    return;
+  }
+
+  @SubscribeMessage('send-mqtt-message')
+  handleMqttMessage(
+    @MessageBody() data: mqttMessageDTO,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    @ConnectedSocket() socket: Socket,
+  ): void {
+    if (typeof data == 'string') {
+      data = JSON.parse(data);
+    }
+
+    this.SensorUpdateProvider.sendMessage(data.topic, data.message);
     return;
   }
 }

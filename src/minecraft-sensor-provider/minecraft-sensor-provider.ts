@@ -1,14 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { SensorUpdateListener } from '../cracow-sensor-update-provider/cracow-sensor-update-provider';
 import { MqttClient } from 'mqtt';
-import { minecraftTopics } from '../config';
+import {
+  minecraftControlTopicPrefix,
+  minecraftTopicPrefix,
+  minecraftTopics,
+} from '../config';
 import { ConfigService } from '@nestjs/config';
 import * as mqtt from 'mqtt';
+
+export type WildcardSensorUpdateListener = (
+  value: string,
+  topic: string,
+) => void;
 
 @Injectable()
 export class MinecraftSensorProvider {
   private client: MqttClient;
-  private wildcardListeners: SensorUpdateListener[] = [];
+  private wildcardListeners: WildcardSensorUpdateListener[] = [];
 
   constructor(private configService: ConfigService) {
     this.client = mqtt.connect(configService.get<string>('MQTT_ADDRESS'), {
@@ -26,12 +35,16 @@ export class MinecraftSensorProvider {
   }
 
   private MessageHandler(topic: string, message: Buffer) {
-    const value = Number(message.toString());
-
-    this.wildcardListeners.forEach((listener) => listener(value));
+    this.wildcardListeners.forEach((listener) =>
+      listener(message.toString(), topic),
+    );
   }
 
-  public registerWildcardListener(type: string, listener: SensorUpdateListener) {
+  public registerWildcardListener(listener: WildcardSensorUpdateListener) {
     this.wildcardListeners.push(listener);
+  }
+
+  public sendMessage(topic: string, message: string) {
+    this.client.publish(minecraftTopicPrefix + topic, message);
   }
 }

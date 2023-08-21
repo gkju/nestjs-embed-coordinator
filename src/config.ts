@@ -2,7 +2,9 @@ import { OpenAiFunction } from './openai/openai';
 
 export const krakowSensorsTopic = 'krakow/#';
 export const minecraftTopics = 'game/minecraft/#';
+export const minecraftTopicPrefix = 'game/minecraft/';
 export const minecraftControlTopics = 'control/game/minecraft/#';
+export const minecraftControlTopicPrefix = 'control/game/minecraft/';
 // city > area > location > room > item > action
 export const aliasMap: Map<string, string> = new Map([
   ['main_base', 'spawn/central/base'],

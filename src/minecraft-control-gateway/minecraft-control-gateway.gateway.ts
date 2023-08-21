@@ -40,16 +40,12 @@ export class MinecraftControlGatewayGateway {
     private ControlProvider: MinecraftControlProvider,
     private openai: Openai,
   ) {
-    for (const sensorType of Object.values(SensorType)) {
-      ControlProvider.registerWildcardListener(sensorType, (value) => {
-        const types = sensorType.split('/');
-        for (let i = 0; i < types.length; i++) {
-          this.server
-            .to(types.slice(0, i + 1).join('/'))
-            .emit(sensorType, value);
-        }
-      });
-    }
+    ControlProvider.registerWildcardListener((value, topic) => {
+      const types = topic.split('/');
+      for (let i = 0; i < types.length; i++) {
+        this.server.to(types.slice(0, i + 1).join('/')).emit(topic, value);
+      }
+    });
   }
 
   @WebSocketServer()
@@ -101,7 +97,8 @@ export class MinecraftControlGatewayGateway {
 
   private callFunction = (name: string, argument: string) => {
     console.log('Calling function', name, argument);
-    const { space, area, location, item, action, alias, room } = JSON.parse(argument);
+    const { space, area, location, item, action, alias, room } =
+      JSON.parse(argument);
 
     switch (name) {
       case 'sendMessage':
