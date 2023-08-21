@@ -42,8 +42,14 @@ export class MinecraftControlProvider {
     this.client.publish(topic, message);
   }
 
-  public sendActionWithAlias(alias: string, item: string, action: string) {
-    const topic = aliasMap[alias] + '/' + item;
+  public sendActionWithAlias(
+    alias: string,
+    item: string,
+    action: string,
+    room: string,
+  ) {
+    // `${space}/${area}/${location}/${room}/${item}`
+    const topic = aliasMap[alias] + `/${room}/${item}`;
     this.client.publish(topic, action);
   }
 }

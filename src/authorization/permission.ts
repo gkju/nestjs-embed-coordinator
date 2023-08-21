@@ -1,11 +1,12 @@
 // true acts as a wildcard and allows user to access all resources in that category
-// hierarchy is as follows: space > area > location > item > action
+// hierarchy is as follows: city > area > location > room > item > action
 // false is currently unused
 export type PropType = string | boolean;
 export class Permission {
-  space: PropType = '';
+  city: PropType = '';
   area: PropType = '';
   location: PropType = '';
+  room: PropType = '';
   item: PropType = '';
   action: PropType = '';
 
@@ -13,27 +14,37 @@ export class Permission {
     space: PropType = '',
     area: PropType = '',
     location: PropType = '',
+    room: PropType = '',
     item: PropType = '',
     action: PropType = '',
   ) {
-    this.space = space;
+    this.city = space;
     this.area = area;
     this.location = location;
+    this.room = room;
     this.item = item;
     this.action = action;
   }
 
   toArray(): (string | boolean)[] {
-    return [this.space, this.area, this.location, this.item, this.action];
+    return [
+      this.city,
+      this.area,
+      this.location,
+      this.room,
+      this.item,
+      this.action,
+    ];
   }
 
   static fromArray = (array: (string | boolean)[]): Permission => {
     const toReturn = new Permission();
-    toReturn.space = array[0];
+    toReturn.city = array[0];
     toReturn.area = array[1];
     toReturn.location = array[2];
-    toReturn.item = array[3];
-    toReturn.action = array[4];
+    toReturn.room = array[3];
+    toReturn.item = array[4];
+    toReturn.action = array[5];
 
     return toReturn;
   };
@@ -72,6 +83,7 @@ export const test = (): void => {
     'space',
     'area',
     'location',
+    'room',
     true,
     '',
   ]);
@@ -79,6 +91,7 @@ export const test = (): void => {
     'space',
     'area',
     'location',
+    'room',
     'item',
     'action',
   ]);
@@ -86,6 +99,7 @@ export const test = (): void => {
     'space',
     'area',
     'location',
+    'room',
     'item',
     'nope',
   ]);
