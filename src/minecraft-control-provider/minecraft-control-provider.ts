@@ -9,6 +9,7 @@ import {
   minecraftControlTopics,
 } from '../config';
 import { WildcardSensorUpdateListener } from '../minecraft-sensor-provider/minecraft-sensor-provider';
+import { Action } from '../authorization/permission';
 
 @Injectable()
 export class MinecraftControlProvider {
@@ -47,11 +48,14 @@ export class MinecraftControlProvider {
   public sendActionWithAlias(
     alias: string,
     item: string,
-    action: string,
+    action: Action,
     room: string,
   ) {
     // `${space}/${area}/${location}/${room}/${item}`
     const topic = aliasMap.get(alias) + `/${room}/${item}`;
-    this.client.publish(minecraftControlTopicPrefix + topic, action);
+    this.client.publish(
+      minecraftControlTopicPrefix + topic,
+      JSON.stringify(action),
+    );
   }
 }

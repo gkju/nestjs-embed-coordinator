@@ -103,11 +103,15 @@ export class MinecraftControlGatewayGateway {
     switch (name) {
       case 'sendMessage':
         const topic = `${city}/${area}/${location}/${room}/${item}`;
-        this.ControlProvider.sendMessage(topic, action);
-        return `Sent ${action} to ${item} in ${room} in ${location} in ${area} in ${city}`;
+        this.ControlProvider.sendMessage(topic, JSON.stringify(action));
+        return `Sent ${JSON.stringify(
+          action,
+        )} to ${item} in ${room} in ${location} in ${area} in ${city}`;
       case 'sendActionWithAlias':
         this.ControlProvider.sendActionWithAlias(alias, item, action, room);
-        return `Sent ${action} to ${item} in ${room} at ${alias}`;
+        return `Sent ${JSON.stringify(
+          action,
+        )} to ${item} in ${room} at ${alias}`;
       default:
         return 'Unknown function';
     }

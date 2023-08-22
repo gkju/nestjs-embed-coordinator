@@ -21,7 +21,7 @@ export const locations = [
   'power_plant',
 ];
 
-// maybe think of a better name than location? eg building/place
+// maybe think of a better name than location? e.g. building/place
 
 export const rooms = [
   'bedroom',
@@ -56,7 +56,17 @@ export const items = [
   'mood_lights',
   'lamp',
 ];
-export const actions = ['open', 'close', 'lock', 'unlock', 'turnon', 'turnoff'];
+
+// TODO: finish migration to action type payload instead of string
+export const actionTypes = [
+  'open',
+  'close',
+  'lock',
+  'unlock',
+  'turnon',
+  'turnoff',
+] as const;
+export type ActionType = (typeof actionTypes)[number];
 // city > area > location > room > item > action
 export const functions: OpenAiFunction[] = [
   {
@@ -88,9 +98,13 @@ export const functions: OpenAiFunction[] = [
           enum: items,
         },
         action: {
-          type: 'string',
+          type: 'object',
           description: 'The action to perform on the item',
-          action: actions,
+          properties: {
+            type: { type: 'string', enum: actionTypes },
+            payload: { type: 'string' },
+            required: ['type'],
+          },
         },
       },
       required: ['city', 'area', 'location', 'item', 'action'],
@@ -119,9 +133,13 @@ export const functions: OpenAiFunction[] = [
           enum: items,
         },
         action: {
-          type: 'string',
+          type: 'object',
           description: 'The action to perform on the item',
-          action: actions,
+          properties: {
+            type: { type: 'string', enum: actionTypes },
+            payload: { type: 'string' },
+            required: ['type'],
+          },
         },
       },
       required: ['alias', 'item', 'action', 'room'],
