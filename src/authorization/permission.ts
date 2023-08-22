@@ -1,10 +1,10 @@
 // true acts as a wildcard and allows user to access all resources in that category
 // hierarchy is as follows: city > area > location > room > item > action
 // false is currently unused
-import { ActionType } from "../config";
+import { ActionType } from '../config';
 
 export type PropType = string | boolean;
-export type Action = { type: ActionType; payload: string };
+export type Action = { type: ActionType; payload?: string };
 export class Permission {
   city: PropType = '';
   area: PropType = '';
