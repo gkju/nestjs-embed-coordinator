@@ -4,7 +4,9 @@
 import { ActionType } from '../config';
 
 export type PropType = string | boolean;
-export type Action = { type: ActionType; payload?: string };
+export type Action = { actionType: ActionType; payload?: string };
+
+// TODO: permissions will still use string actions, type = string action
 export class Permission {
   city: PropType = '';
   area: PropType = '';

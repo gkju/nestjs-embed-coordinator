@@ -42,8 +42,8 @@ let sent = false;
     socket.emit("openai-action", {prompt: "Could you turn on the lights in the living room?", conversationId});
 
     setTimeout(() => {
-      socket.emit("openai-action", {prompt: "please turn on the fission reactor in block_a", conversationId});
-    }, 3000);
+      socket.emit("openai-action", {prompt: "please set coolant input to 1000mb for fission reactor in block_a", conversationId});
+    }, 6000);
 
   });
 

@@ -65,6 +65,14 @@ export const actionTypes = [
   'unlock',
   'turnon',
   'turnoff',
+  'setPowerOutput',
+  'setPowerInput',
+  'setPowerProductionTarget',
+  'setFluidInput',
+  'setFluidOutput',
+  'setCoolantInput',
+  'setControlRodLevel',
+  'setFuelInput',
 ] as const;
 export type ActionType = (typeof actionTypes)[number];
 // city > area > location > room > item > action
@@ -101,10 +109,10 @@ export const functions: OpenAiFunction[] = [
           type: 'object',
           description: 'The action to perform on the item',
           properties: {
-            type: { type: 'string', enum: actionTypes },
+            'actionType': { type: 'string', enum: actionTypes },
             payload: { type: 'string' },
-            required: ['type'],
           },
+          required: ['actionType'],
         },
       },
       required: ['city', 'area', 'location', 'item', 'action'],
@@ -136,10 +144,10 @@ export const functions: OpenAiFunction[] = [
           type: 'object',
           description: 'The action to perform on the item',
           properties: {
-            type: { type: 'string', enum: actionTypes },
+            'actionType': { type: 'string', enum: actionTypes },
             payload: { type: 'string' },
-            required: ['type'],
           },
+          required: ['actionType'],
         },
       },
       required: ['alias', 'item', 'action', 'room'],
